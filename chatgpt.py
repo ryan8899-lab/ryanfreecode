@@ -259,7 +259,7 @@ def generate_oauth_url(*, redirect_uri: str = DEFAULT_REDIRECT_URI, scope: str =
     auth_url = f"{AUTH_URL}?{urllib.parse.urlencode(params)}"
     return OAuthStart(auth_url=auth_url, state=state, code_verifier=code_verifier, redirect_uri=redirect_uri)
 
-def fetch_sentinel_token(*, flow: str, did: str, proxies: Any = None) -> Optional[str]:
+def fetch_sentinel_token(*, flow: str, did: str, sv: str = "20260219f9f6", proxies: Any = None) -> Optional[str]:
     """获取 OpenAI 最新的反爬 Token (Sentinel)"""
     try:
         body = json.dumps({"p": "", "id": did, "flow": flow})
@@ -267,7 +267,7 @@ def fetch_sentinel_token(*, flow: str, did: str, proxies: Any = None) -> Optiona
             "https://sentinel.openai.com/backend-api/sentinel/req",
             headers={
                 "origin": "https://sentinel.openai.com",
-                "referer": "https://sentinel.openai.com/backend-api/sentinel/frame.html?sv=20260219f9f6",
+                "referer": f"https://sentinel.openai.com/backend-api/sentinel/frame.html?sv={sv}",
                 "content-type": "text/plain;charset=UTF-8",
                 "user-agent": UA
             },
@@ -318,12 +318,12 @@ def run(proxy: Optional[str]) -> Optional[tuple[str, str, str]]:
     s = requests.Session(proxies=proxies, impersonate="chrome120")
     s.headers.update({"user-agent": UA})
 
-    # 已根据要求硬编码邮箱，并预留手动输入验证码的接口
+    # 确认邮箱: ShelbyDavis8132@hotmail.com
     email = "ShelbyDavis8132@hotmail.com"
     password = _gen_password()
     
-    print(f"[*] 使用硬编码邮箱: {email}")
-    print(f"[*] 生成高强度密码: {password}")
+    print(f"[*] 使用确认邮箱: {email}")
+    print(f"[*] 生成验证密码: {password}")
 
     def code_fetcher():
         print(f"\n{'='*50}")
@@ -339,19 +339,24 @@ def run(proxy: Optional[str]) -> Optional[tuple[str, str, str]]:
     oauth = generate_oauth_url()
     
     try:
-        # 第一步：进入 OAuth
+        # 第一步：进入 OAuth 并提取 Sentinel 版本
         resp = s.get(oauth.auth_url, timeout=15)
+        # 尝试从页面中提取 sv=xxxx
+        sv_match = re.search(r"sentinel/frame\.html\?sv=([a-f0-9]+)", resp.text)
+        sv = sv_match.group(1) if sv_match else "20260219f9f6"
+        print(f"[*] 动态提取 Sentinel 版本: {sv}")
+
         did = s.cookies.get("oai-did")
         if not did:
             print("[Error] 未能获取到 OpenAI Device ID (oai-did)")
             return None
 
         # 第二步：获取 Sentinel Token (authorize_continue)
-        sen_token = fetch_sentinel_token(flow="authorize_continue", did=did, proxies=proxies)
+        sen_token = fetch_sentinel_token(flow="authorize_continue", did=did, sv=sv, proxies=proxies)
         sentinel = json.dumps({"p": "", "t": "", "c": sen_token, "id": did, "flow": "authorize_continue"}) if sen_token else None
 
         # 第三步：获取 Sentinel SO Token (oauth_create_account)
-        so_token = fetch_sentinel_token(flow="oauth_create_account", did=did, proxies=proxies)
+        so_token = fetch_sentinel_token(flow="oauth_create_account", did=did, sv=sv, proxies=proxies)
 
         # 第四步：提交邮箱授权
         signup_headers = {"referer": "https://auth.openai.com/create-account", "accept": "application/json", "content-type": "application/json"}
@@ -361,16 +366,20 @@ def run(proxy: Optional[str]) -> Optional[tuple[str, str, str]]:
             _print_http_error("[Error] 提交邮箱失败", signup_resp)
             return None
 
-        # 第五步：设置密码
-        # 修正：为 user_register 获取专属 Sentinel Token
-        reg_sen_token = fetch_sentinel_token(flow="user_register", did=did, proxies=proxies)
+        # 第五步：设置密码 (重点排查对象)
+        reg_sen_token = fetch_sentinel_token(flow="user_register", did=did, sv=sv, proxies=proxies)
         reg_sentinel = json.dumps({"p": "", "t": "", "c": reg_sen_token, "id": did, "flow": "user_register"}) if reg_sen_token else None
         
         register_headers = {"referer": "https://auth.openai.com/create-account/password", "accept": "application/json", "content-type": "application/json"}
         if reg_sentinel: register_headers["openai-sentinel-token"] = reg_sentinel
-        reg_resp = s.post("https://auth.openai.com/api/accounts/user/register", headers=register_headers, data=json.dumps({"password": password, "username": email}))
+        
+        reg_payload = {"password": password, "username": email}
+        print(f"[Debug] 注册请求 PayLoad: {json.dumps(reg_payload)}")
+        
+        reg_resp = s.post("https://auth.openai.com/api/accounts/user/register", headers=register_headers, data=json.dumps(reg_payload))
         if reg_resp.status_code != 200:
-            _print_http_error("[Error] 设置密码失败", reg_resp)
+            print(f"[Debug] 注册接口返回状态码: {reg_resp.status_code}")
+            _print_http_error("[Error] 设置密码失败 (具体见下方响应)", reg_resp)
             return None
 
         # 第六步：触发并提取验证码
