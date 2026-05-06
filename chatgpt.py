@@ -362,15 +362,26 @@ def run(proxy: Optional[str]) -> Optional[tuple[str, str, str]]:
             return None
 
         # 第五步：设置密码
+        # 修正：为 user_register 获取专属 Sentinel Token
+        reg_sen_token = fetch_sentinel_token(flow="user_register", did=did, proxies=proxies)
+        reg_sentinel = json.dumps({"p": "", "t": "", "c": reg_sen_token, "id": did, "flow": "user_register"}) if reg_sen_token else None
+        
         register_headers = {"referer": "https://auth.openai.com/create-account/password", "accept": "application/json", "content-type": "application/json"}
-        if sentinel: register_headers["openai-sentinel-token"] = sentinel
+        if reg_sentinel: register_headers["openai-sentinel-token"] = reg_sentinel
         reg_resp = s.post("https://auth.openai.com/api/accounts/user/register", headers=register_headers, data=json.dumps({"password": password, "username": email}))
         if reg_resp.status_code != 200:
             _print_http_error("[Error] 设置密码失败", reg_resp)
             return None
 
         # 第六步：触发并提取验证码
-        s.get("https://auth.openai.com/api/accounts/email-otp/send", headers=register_headers, timeout=15)
+        # 修正：为 email_otp_send 获取专属 Sentinel Token
+        otp_send_token = fetch_sentinel_token(flow="email_otp_send", did=did, proxies=proxies)
+        otp_send_sentinel = json.dumps({"p": "", "t": "", "c": otp_send_token, "id": did, "flow": "email_otp_send"}) if otp_send_token else None
+        
+        otp_headers = register_headers.copy()
+        if otp_send_sentinel: otp_headers["openai-sentinel-token"] = otp_send_sentinel
+        s.get("https://auth.openai.com/api/accounts/email-otp/send", headers=otp_headers, timeout=15)
+        
         code = code_fetcher()
         if not code:
             print("[Error] 验证码等待超时或提取失败")
@@ -378,8 +389,12 @@ def run(proxy: Optional[str]) -> Optional[tuple[str, str, str]]:
         print(f"[*] 成功提取验证码: {code}")
 
         # 第七步：校验验证码
+        # 修正：为 email_otp_validate 获取专属 Sentinel Token
+        otp_val_token = fetch_sentinel_token(flow="email_otp_validate", did=did, proxies=proxies)
+        otp_val_sentinel = json.dumps({"p": "", "t": "", "c": otp_val_token, "id": did, "flow": "email_otp_validate"}) if otp_val_token else None
+        
         validate_headers = {"referer": "https://auth.openai.com/email-verification", "accept": "application/json", "content-type": "application/json"}
-        if sentinel: validate_headers["openai-sentinel-token"] = sentinel
+        if otp_val_sentinel: validate_headers["openai-sentinel-token"] = otp_val_sentinel
         code_resp = s.post("https://auth.openai.com/api/accounts/email-otp/validate", headers=validate_headers, data=json.dumps({"code": code}))
         if code_resp.status_code != 200:
             _print_http_error("[Error] 验证码校验失败", code_resp)
