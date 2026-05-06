@@ -43,14 +43,8 @@ def _print_http_error(label, resp):
         print(f"  [Response] {text[:1000] if text else '<empty>'}")
 
 def mreq(mt, pt, js=None, tk=None, proxies=None):
-    hdrs = {
-        "content-type": "application/json",
-        "accept": "application/json",
-        "user-agent": UA,
-        "pragma": "no-cache"
-    }
-    if tk: 
-        hdrs["authorization"] = f"Bearer {tk}"
+    hdrs = {"content-type": "application/json", "accept": "application/json", "user-agent": UA, "pragma": "no-cache"}
+    if tk: hdrs["authorization"] = f"Bearer {tk}"
     try:
         with Session(proxies=proxies) as s:
             return s.request(mt, f"https://api.mail.tm{pt}", json=js, headers=hdrs, timeout=20)
@@ -62,14 +56,9 @@ def getotp(tk, proxies=None):
     for _ in range(60):
         r = mreq("GET", "/messages", tk=tk, proxies=proxies)
         if r and r.status_code == 200:
-            try: 
-                dat = r.json()
-            except: 
-                time.sleep(8); continue
-                
+            try: dat = r.json()
+            except: time.sleep(8); continue
             msgs = dat.get("hydra:member", []) if isinstance(dat, dict) else dat
-            if not isinstance(msgs, list): msgs = []
-                
             for m in msgs:
                 if not isinstance(m, dict): continue
                 sb = m.get("subject", "")
@@ -79,32 +68,9 @@ def getotp(tk, proxies=None):
                     if rb and rb.status_code == 200:
                         txt = rb.json().get("text", "")
                         mt = re.search(r"(\d{6})", txt) or re.search(r"(\d{6})", sb)
-                        if mt: 
-                            return mt.group(1)
+                        if mt: return mt.group(1)
         time.sleep(8)
     return None
-
-def setup_mail_tm(proxies=None):
-    """动态获取 mail.tm 邮箱并返回所需数据"""
-    mail_pw = "at41rvxgptye"
-    domain_res = mreq("GET", "/domains", proxies=proxies)
-    if not domain_res or domain_res.status_code != 200: return None, None, None
-    try:
-        js_data = domain_res.json()
-        domains_data = js_data if isinstance(js_data, list) else js_data.get("hydra:member", [])
-        if not domains_data: return None, None, None
-        active_domain = domains_data[0].get("domain")
-    except: return None, None, None
-
-    email = f"{rstr(10)}@{active_domain}"
-    openai_password = _gen_password()
-    r = mreq("POST", "/accounts", {"address": email, "password": mail_pw}, proxies=proxies)
-    if not r or r.status_code not in [200, 201]: return None, None, None
-    r = mreq("POST", "/token", {"address": email, "password": mail_pw}, proxies=proxies)
-    if not r or r.status_code != 200: return None, None, None
-    mail_token = r.json().get("token")
-    return email, openai_password, (lambda: getotp(mail_token, proxies=proxies))
-
 
 # ========== 2. OpenAI OAuth2 授权与环境生成模块 ==========
 
@@ -252,6 +218,10 @@ def run(proxy: Optional[str]) -> Optional[tuple[str, str, str]]:
 
     oauth = generate_oauth_url()
     try:
+        # 预定义所有 header 变量防止 UnboundLocalError
+        sen_token = signup_hdr = so_token = reg_sen_token = reg_hdr = None
+        otp_send_token = otp_send_hdr = otp_val_token = otp_val_hdr = None
+
         # 第一步：进入 OAuth 并提取 Sentinel 版本
         resp = s.get(oauth.auth_url, timeout=15)
         sv_match = re.search(r"sentinel/frame\.html\?sv=([a-f0-9]+)", resp.text)
@@ -261,27 +231,24 @@ def run(proxy: Optional[str]) -> Optional[tuple[str, str, str]]:
 
         # 第二步：获取 Sentinel Token (authorize_continue)
         sen_token = fetch_sentinel_token(flow="authorize_continue", did=did, sv=sv, proxies=proxies)
-        sentinel_hdr = json.dumps({"p": "", "t": "", "c": sen_token}) if sen_token else None
+        signup_hdr = json.dumps({"p": "", "t": "", "c": sen_token}) if sen_token else None
 
         # 第三步：获取 Sentinel SO Token (oauth_create_account)
         so_token = fetch_sentinel_token(flow="oauth_create_account", did=did, sv=sv, proxies=proxies)
 
         # 第四步：提交邮箱授权
         signup_headers = {"referer": "https://auth.openai.com/create-account", "accept": "application/json", "content-type": "application/json", "origin": "https://auth.openai.com"}
-        if sentinel_hdr: signup_headers["openai-sentinel-token"] = sentinel_hdr
+        if signup_hdr: signup_headers["openai-sentinel-token"] = signup_hdr
         signup_resp = s.post("https://auth.openai.com/api/accounts/authorize/continue", headers=signup_headers, data=json.dumps({"username": {"value": email, "kind": "email"}, "screen_hint": "signup"}))
         print(f"[Debug] 提交邮箱响应: {signup_resp.status_code} - {signup_resp.text}")
         if signup_resp.status_code != 200: return None
 
-        # 第五步：设置密码 (修正 flow 为 username_password_create, 且 header 格式对齐 curl)
+        # 第五步：设置密码
         reg_sen_token = fetch_sentinel_token(flow="username_password_create", did=did, sv=sv, proxies=proxies)
-        reg_sentinel_hdr = json.dumps({"p": "", "t": "", "c": reg_sen_token}) if reg_sen_token else None
+        reg_hdr = json.dumps({"p": "", "t": "", "c": reg_sen_token}) if reg_sen_token else None
         
-        register_headers = {
-            "referer": "https://auth.openai.com/create-account/password", "accept": "application/json", "content-type": "application/json",
-            "x-datadog-origin": "rum", "sec-ch-ua-platform": '"macOS"', "origin": "https://auth.openai.com"
-        }
-        if reg_sentinel_hdr: register_headers["openai-sentinel-token"] = reg_sentinel_hdr
+        register_headers = {"referer": "https://auth.openai.com/create-account/password", "accept": "application/json", "content-type": "application/json", "x-datadog-origin": "rum", "sec-ch-ua-platform": '"macOS"', "origin": "https://auth.openai.com"}
+        if reg_hdr: register_headers["openai-sentinel-token"] = reg_hdr
         
         reg_resp = s.post("https://auth.openai.com/api/accounts/user/register", headers=register_headers, data=json.dumps({"password": password, "username": email}))
         print(f"[Debug] 设置密码响应: {reg_resp.status_code} - {reg_resp.text}")
@@ -298,16 +265,20 @@ def run(proxy: Optional[str]) -> Optional[tuple[str, str, str]]:
         
         # 第七步：校验验证码
         otp_val_token = fetch_sentinel_token(flow="email_otp_validate", did=did, sv=sv, proxies=proxies)
-        otp_val_hdr = json.dumps({"p": "", "t": "", "c": otp_val_token}) if otp_val_hdr else None
-        validate_headers = {"referer": "https://auth.openai.com/email-verification", "accept": "application/json", "content-type": "application/json"}
+        otp_val_hdr = json.dumps({"p": "", "t": "", "c": otp_val_token}) if otp_val_token else None
+        validate_headers = {"referer": "https://auth.openai.com/email-verification", "accept": "application/json", "content-type": "application/json", "origin": "https://auth.openai.com"}
         if otp_val_hdr: validate_headers["openai-sentinel-token"] = otp_val_hdr
+        
         code_resp = s.post("https://auth.openai.com/api/accounts/email-otp/validate", headers=validate_headers, data=json.dumps({"code": code}))
+        print(f"[Debug] 校验验证码响应: {code_resp.status_code} - {code_resp.text}")
         if code_resp.status_code != 200: return None
 
         # 第八步：完成账号注册填写
-        create_headers = {"referer": "https://auth.openai.com/about-you", "accept": "application/json", "content-type": "application/json"}
+        create_headers = {"referer": "https://auth.openai.com/about-you", "accept": "application/json", "content-type": "application/json", "origin": "https://auth.openai.com"}
         if so_token: create_headers["openai-sentinel-so-token"] = so_token
-        create_resp = s.post("https://auth.openai.com/api/accounts/create_account", headers=create_headers, data=json.dumps({"name": _random_name(), "birthdate": _random_birthdate()}))
+        create_payload = {"name": _random_name(), "birthdate": _random_birthdate()}
+        create_resp = s.post("https://auth.openai.com/api/accounts/create_account", headers=create_headers, data=json.dumps(create_payload))
+        print(f"[Debug] 账户信息填写响应: {create_resp.status_code} - {create_resp.text}")
         if create_resp.status_code != 200: return None
 
         # 第九步：选择工作区 Workspace
@@ -315,7 +286,7 @@ def run(proxy: Optional[str]) -> Optional[tuple[str, str, str]]:
         if not auth_cookie: return None
         auth_json = _decode_jwt_segment(auth_cookie.split(".")[0])
         workspace_id = str((auth_json.get("workspaces") or [{}])[0].get("id") or "").strip()
-        select_resp = s.post("https://auth.openai.com/api/accounts/workspace/select", headers={"referer": "https://auth.openai.com/sign-in-with-chatgpt/codex/consent", "content-type": "application/json"}, data=json.dumps({"workspace_id": workspace_id}))
+        select_resp = s.post("https://auth.openai.com/api/accounts/workspace/select", headers={"referer": "https://auth.openai.com/sign-in-with-chatgpt/codex/consent", "content-type": "application/json", "origin": "https://auth.openai.com"}, data=json.dumps({"workspace_id": workspace_id}))
         if select_resp.status_code != 200: return None
         
         # 第十步：拦截重定向，提取终极 Token
