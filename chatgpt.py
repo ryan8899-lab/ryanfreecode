@@ -185,6 +185,14 @@ def run(proxy: Optional[str]) -> Optional[tuple[str, str, str]]:
         code_resp = s.post("https://auth.openai.com/api/accounts/email-otp/validate", headers=val_headers, data=json.dumps({"code": code}))
         print(f"[Debug] 校验验证码响应: {code_resp.status_code}")
         if code_resp.status_code != 200: return None
+        
+        # --- 核心修复：执行页面跳转 ---
+        val_res = code_resp.json()
+        cont_url = val_res.get("continue_url", "https://auth.openai.com/about-you")
+        print(f"[*] 校验通过，正在跳转至: {cont_url}")
+        # 必须先 GET 这个页面，否则直接 POST create_account 会报 invalid_auth_step
+        s.get(cont_url, headers={"referer": "https://auth.openai.com/email-verification", "user-agent": UA}, timeout=15)
+        # ---------------------------
 
         # 6. 填写账户信息 (核心对齐步：双 Header 发送)
         # 获取针对 oauth_create_account 的 Sentinel 数据
