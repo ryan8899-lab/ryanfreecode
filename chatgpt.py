@@ -262,7 +262,22 @@ def generate_oauth_url(*, redirect_uri: str = DEFAULT_REDIRECT_URI, scope: str =
 def fetch_sentinel_token(*, flow: str, did: str, sv: str = "20260219f9f6", proxies: Any = None) -> Optional[str]:
     """获取 OpenAI 最新的反爬 Token (Sentinel)"""
     try:
+        # 模拟一个基础的 p 参数（包含时间戳和 UA，但不加密，看是否能降低风控）
+        now_str = datetime.now().strftime("%a %b %d %Y %H:%M:%S GMT+0800 (China Standard Time)")
+        p_raw = [
+            f"gAAAAAB{int(time.time())}", 
+            now_str, 
+            4294967296, 97, UA,
+            f"https://sentinel.openai.com/sentinel/{sv}/sdk.js",
+            None, "en-US", "en-US,en", 48, 
+            "vibrate—function vibrate() { [native code] }",
+            "__reactContainer$fz60x5v8ku", "onpointerdown", 83546.6,
+            str(uuid.uuid4()), "", 12, int(time.time() * 1000),
+            0, 0, 0, 0, 0, 0, 0
+        ]
+        # 注意：这里仅仅是模拟结构，真正的 p 是 Fernet 加密的。先传空或基础结构尝试。
         body = json.dumps({"p": "", "id": did, "flow": flow})
+        
         resp = requests.post(
             "https://sentinel.openai.com/backend-api/sentinel/req",
             headers={
@@ -273,9 +288,16 @@ def fetch_sentinel_token(*, flow: str, did: str, sv: str = "20260219f9f6", proxi
             },
             data=body, proxies=proxies, impersonate="chrome120", timeout=15,
         )
-        if resp.status_code != 200: return None
-        return resp.json().get("token")
-    except: return None
+        if resp.status_code != 200: 
+            print(f"[Debug] Sentinel Req Error: {resp.status_code}")
+            return None
+        
+        res_json = resp.json()
+        # print(f"[Debug] Sentinel Response: {json.dumps(res_json)}") # 调试用
+        return res_json.get("token")
+    except Exception as e:
+        print(f"[Debug] fetch_sentinel_token exception: {e}")
+        return None
 
 def submit_callback_url(*, callback_url: str, expected_state: str, code_verifier: str, redirect_uri: str = DEFAULT_REDIRECT_URI) -> str:
     """提取重定向中的 Code 并换取最终的 Access / Refresh Token"""
@@ -366,15 +388,22 @@ def run(proxy: Optional[str]) -> Optional[tuple[str, str, str]]:
             _print_http_error("[Error] 提交邮箱失败", signup_resp)
             return None
 
-        # 第五步：设置密码 (重点排查对象)
-        reg_sen_token = fetch_sentinel_token(flow="user_register", did=did, sv=sv, proxies=proxies)
-        reg_sentinel = json.dumps({"p": "", "t": "", "c": reg_sen_token, "id": did, "flow": "user_register"}) if reg_sen_token else None
+        # 第五步：设置密码 (根据用户 curl 修正 flow 名称为 username_password_create)
+        reg_sen_token = fetch_sentinel_token(flow="username_password_create", did=did, sv=sv, proxies=proxies)
+        reg_sentinel = json.dumps({"p": "", "t": "", "c": reg_sen_token, "id": did, "flow": "username_password_create"}) if reg_sen_token else None
         
-        register_headers = {"referer": "https://auth.openai.com/create-account/password", "accept": "application/json", "content-type": "application/json"}
+        register_headers = {
+            "referer": "https://auth.openai.com/create-account/password", 
+            "accept": "application/json", 
+            "content-type": "application/json",
+            "x-datadog-origin": "rum",
+            "sec-ch-ua-platform": '"macOS"',
+            "origin": "https://auth.openai.com"
+        }
         if reg_sentinel: register_headers["openai-sentinel-token"] = reg_sentinel
         
         reg_payload = {"password": password, "username": email}
-        print(f"[Debug] 注册请求 PayLoad: {json.dumps(reg_payload)}")
+        print(f"[Debug] 注册请求 (username_password_create) PayLoad: {json.dumps(reg_payload)}")
         
         reg_resp = s.post("https://auth.openai.com/api/accounts/user/register", headers=register_headers, data=json.dumps(reg_payload))
         if reg_resp.status_code != 200:
