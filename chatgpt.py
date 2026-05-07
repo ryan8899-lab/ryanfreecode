@@ -102,7 +102,7 @@ def run(proxy: Optional[str]) -> Optional[tuple[str, str, str]]:
     s = requests.Session(proxies=proxies, impersonate="chrome120")
     s.headers.update({"user-agent": UA})
 
-    email = "VspzcpDtqk9300@outlook.com"
+    email = "PmegtAiycrh7604@outlook.com"
     password = _gen_password()
     print(f"[*] 准备注册邮箱: {email}")
 
