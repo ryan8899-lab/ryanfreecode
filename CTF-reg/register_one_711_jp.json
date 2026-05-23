@@ -1,0 +1,61 @@
+{
+  "mail": {
+    "_comment": "OTP 走 Cloudflare Email Worker → KV（见 scripts/setup_cf_email_worker.py + scripts/otp_email_worker.js）。CF 凭证存 SQLite runtime_meta[secrets].cloudflare 段，不在这里。",
+    "catch_all_domain": "chatgtp.plus",
+    "catch_all_domains": [
+      "chatgtp.plus"
+    ],
+    "auto_provision": {
+      "enabled": false,
+      "zone_name": "example.com",
+      "min_available": 3,
+      "min_segs": 1,
+      "max_segs": 4,
+      "min_seg_len": 2,
+      "max_seg_len": 5,
+      "dns_propagation_s": 20
+    }
+  },
+  "card": {
+    "number": "4242424242424242",
+    "cvc": "123",
+    "exp_month": "12",
+    "exp_year": "2030"
+  },
+  "billing": {
+    "name": "JOHN DOE",
+    "email": "",
+    "country": "US",
+    "currency": "USD",
+    "address_line1": "1 Example Street",
+    "address_state": "CA",
+    "postal_code": "94105",
+    "address_city": "San Francisco",
+    "address_line2": ""
+  },
+  "team_plan": {
+    "plan_name": "chatgptplusplan",
+    "workspace_name": "MyWorkspace",
+    "price_interval": "month",
+    "seat_quantity": 5,
+    "promo_campaign_id": "plus-1-month-free",
+    "plan_type": "plus",
+    "entry_point": "all_plans_pricing_modal",
+    "is_coupon_from_query_param": false,
+    "checkout_ui_mode": "hosted",
+    "output_url_mode": "provider",
+    "billing_country": "GB",
+    "billing_currency": "GBP"
+  },
+  "captcha": {
+    "api_url": "https://YOUR_CAPTCHA_PROVIDER",
+    "client_key": "baa81bc3813355c089d1c6d4e8c8b193c6493f15120935"
+  },
+  "proxy": "http://USER798754-zone-custom-region-JP-session-47594307-sessTime-5-sessAuto-1:fd1e64@global.rotgb.711proxy.com:10000",
+  "session_token": "",
+  "access_token": "",
+  "device_id": "",
+  "stripe_build_hash": "",
+  "code_system_enabled": false,
+  "registration_proxy": "http://USER798754-zone-custom-region-JP-session-47594307-sessTime-5-sessAuto-1:fd1e64@global.rotgb.711proxy.com:10000"
+}

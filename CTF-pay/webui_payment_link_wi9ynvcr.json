@@ -1,0 +1,169 @@
+{
+  "team_system": {
+    "enabled": false,
+    "base_url": "http://127.0.0.1:3000",
+    "username": "admin",
+    "password": "YOUR_TEAM_SYSTEM_PASSWORD",
+    "timeout_s": 60,
+    "domain_cooldown_hours": 24
+  },
+  "daemon": {
+    "target_ok_accounts": 20,
+    "usage_pool": "recovery",
+    "poll_interval_s": 600,
+    "rate_limit": {
+      "per_hour": 0,
+      "per_day": 0
+    },
+    "max_consecutive_failures": 5,
+    "consecutive_fail_cooldown_s": 1800,
+    "jitter_before_run_s": [
+      60,
+      180
+    ],
+    "seat_limit": 5
+  },
+  "proxies": {
+    "enabled": false,
+    "rotation": "random",
+    "list": []
+  },
+  "randomize_identity": false,
+  "pre_solve_passive_captcha": false,
+  "browser_challenge": {
+    "enabled": true,
+    "auto_launch_browser": false,
+    "headless": false,
+    "timeout_ms": 1800000,
+    "auto_click_checkbox": true
+  },
+  "cards": [
+    {
+      "number": "4242424242424242",
+      "cvc": "123",
+      "exp_month": "12",
+      "exp_year": "2030",
+      "address": {
+        "line1": "152 Hawk Ct",
+        "city": "Bamberg",
+        "state": "SC",
+        "postal_code": "29003",
+        "country": "US"
+      },
+      "name": "CHRISTOPHER YOUNG",
+      "email": "buyerizs15dv0@chatgmail.com"
+    }
+  ],
+  "paypal": {
+    "_comment": "PayPal 邮箱必须是 catch-all zone 内的地址；2FA OTP 经 CF Email Worker → KV 自动取（见 SQLite runtime_meta[secrets].cloudflare），不再需要 IMAP 字段。",
+    "email": "admin@admin.com",
+    "password": "ryan8899",
+    "cookies": ""
+  },
+  "captcha": {
+    "api_url": "https://api.yescaptcha.com",
+    "api_key": "baa81bc3813355c089d1c6d4e8c8b193c6493f15120935"
+  },
+  "fresh_checkout": {
+    "enabled": false,
+    "bootstrap_from_flows": false,
+    "flows_path": "../flows",
+    "auto_refresh_on_inactive": true,
+    "warmup_route_data": true,
+    "plan": {
+      "workspace_name": "MyWorkspace",
+      "price_interval": "month",
+      "seat_quantity": 5,
+      "billing_country": "GB",
+      "billing_currency": "GBP",
+      "promo_campaign_id": "plus-1-month-free",
+      "checkout_ui_mode": "hosted",
+      "cancel_url": "https://chatgpt.com/#pricing",
+      "plan_name": "chatgptplusplan",
+      "payment_lower_bound_amount_cents": 0,
+      "payment_upper_bound_amount_cents": 100000,
+      "entry_point": "all_plans_pricing_modal",
+      "output_url_mode": "provider",
+      "is_coupon_from_query_param": true
+    },
+    "auth": {
+      "cookie_header": "__Host-next-auth.csrf-token=be0d8a29df4f9a6ef582ad8bac0b6d8ac2ee226501ebde3283e6ebd52e7121df%7C9ead83326ec1cc2963f5a7932f8925613ddd6532ac501d951ba501b10711b9bb; oai-did=1bcfa2cd-fdf7-4d11-b93a-3198587c3413; __cflb=0H28vzvP5FJafnkHxisypqHjt4CAsgM3TiCVTV1RtrP; _cfuvid=Ovzk3pWQodaFfr.m4qw72CRY9FrXFolF1aerqpkUjh8-1779286042.3382823-1.0.1.1-UJMciZQDDjF3ak2.nR5WIYx7nHQilI8eeiiMZxxlp.4; cf_clearance=snnzoejCnR0I3veDrK4PtnrtcIMMO851KktG5mqzkzc-1779286050-1.2.1.1-IVGsiZu26AwmFuJ2ELzX9Oq2Itprt9yuJczHj6QxGBfFnZT6XAuODPGdTb4HbQIepb_YT7corNPlibP.zyirhfus03AibJBEDg.p75NqnjLNg0aB3OJeNDWk4a5SH_ggi1Oq5ffWpfGkeD1k7gwjdbYMk_mCR3cBJa2rESWTI0cTtC_uFb67vuLBhlARDiLzpPfxmL5ItRU9vk_JasBd82N.TNNyLXadapuraExfOXxYmDOiyIxaLyWl_.wp76Q1xoXCgOzAzxLnn0u5fiTHQPpLA02EGkg1LKNc9Z70bysSqiitmDFgoW7suLaFcdcHjTSY4kb3O28f4.tbDFCMbQ; __cf_bm=cD7nNLWq_YNFSVy6P2R2b1KyxDAXVk97c7cM.ZE1vOI-1779286050.2143235-1.0.1.1-NrvW5B25exU25aLfhnxaZC8.QVt4QBTMWSLA7HeorDllks1P3tEYP1WTt9VHW111N01mP_N3gbby49p_IuQpSe8e9qKOXUT5Qn2O5CinwGkJJNM4OT_S.gUX2Fa__fJk; oai-chat-web-route=\"ChMxMC4xMjkuMTI5LjIxMTozMDAwEIHfogE=\"; __Secure-next-auth.callback-url=https%3A%2F%2Fchatgpt.com%2F; oai-hlib=true; _dd_s=aid=16763519-f8a6-46f2-8f33-74c1a0732575&rum=0&expire=1779287039243&logs=1&id=4fef794a-f005-438b-8956-6532f0f96bff&created=1779286050509; oai-gn=; oai-client-auth-info=%7B%22user%22%3A%7B%22name%22%3A%22Oliver%20Davis%22%2C%22email%22%3A%22maxendax3194%40outlook.com%22%2C%22picture%22%3Anull%2C%22connectionType%22%3A1%2C%22timestamp%22%3A1779286143702%7D%2C%22loggedInWithGoogleOneTap%22%3Afalse%2C%22isOptedOut%22%3Afalse%7D; oai-sc=0gAAAAABqDcCCdB7BJ74ysuUZPKO1VfkldSB8BiypBVm6vkcEKahWdt1NYMu5-ENSXzxjDXUPF8H5Qnvv9KuiVVb0aU95MxeSzokWclQVjoWwYNg2oOsQfhItCjbDYtWX5bfsu2LXBpPV9iOXrT64MUlh3GfoQXLLhcm25Cr-wEmogN_pkD2n5jHjKlthR8FS0kVOjKMvoFHDOaCNTklgzY3E1DMofD5fsYqiUq62PUIG2YzsUKCvPWQ; __Secure-oai-is=ois1.eyJ2IjoxLCJhbGciOiJBMjU2R0NNIiwia2lkIjoiY2hhdGdwdC13ZWItdjEifQ.YS1dYgTkIbew5Uh6.RKgrQnJBz3E3RI1xNHuq6TVqPf87Heu6Pl2sARbwRJGzdW84sF7klvnMZBmWvCHP_NKfwqybmp-WS3KIb32F5RTJZ8_bwCLNZL6e8vAxrqOXAR6W_u_cdUGQD894PgGW-nNcar7L-UfmzjZ00gHRmYmoBScbQ2IAMB7fCMiqGFGwPBE5dBzaJ-a67X0T4k5ld6CcrI0oe0MxLx1MY4HgAvY-YW7yJgR3TAPpnYse5i_siML2GDfsZe5o6Kc-fU7H-DAlfRz38xR72rdpNtp3EObU_P5X1h3nQe3ZNE_qbPtGfXPuZ4LLjsNqBlMvafOyn359oOsqf5_S86w3SOz-fHh9NZdXUnGva_ua0peAMS0flPq3H_DxMGf-DMvKGS38_9pTVW22O7WqC4R_WzaStMDQ5bq-FXgsm8njm9NI6C9edgAJ-wtT2WTLOb61SU0LRayzod08KmggUuFlDT0IrPRWPJM8FSof9NrGvIXKiQaNPLzLG0OZ8DM-soO5vNOiDBJbv63PFI_vAEV-NsC5guigXdgDIp--QIX24ZOMQBv-j89Cv9CjU-5hbM_WCco0N7XNnTQO_2bgjKniPWh7iKTc5SzA8TrY4p8d8-YCD3xqswE100di2-PIhnDKCXaGnRXnVmlKIG8zaFMRz_WTenqblJML6-gsHN33QNcGkVs3bstDHT5F8oiukDol4abSl76WDILMVfZFfRhazcUN22b1iUuYsf9w7g0CDwH6ne_ifz_pcY-UE7OdnZ5nNUVboV3p2ieJYnihc5iXiXRyW1OXNT4jdY3_JYgPzJFNqaIOsWMvwEX-W5F3dtCMj34CV7xFSWynMhAPaQec_ff1nkKsHVCfnkqX2wAxQHIpUgyj4VGaCm0CN48dRv0jws6Z8pfFgTcUrelOSHixAlApB7DEDJ1i6nVR7zYaCIL7n4DBuKBw0V5NWMqaJgTU0NN6Xy8mL8vgq7EphQZRxNJvxEKvebtItnFfypuZql7T0qqsTeFG4ZycYioMV7w5Ztm5OiRvHcTDJFAETIu11peGJgPXvdgin9Gv_sYiMaLZ9z5ckzrZJH3bFfAGkuN_m_SxV4g18m8iVLZslwL9xpzLZPa9EQ92wag; __cf_bm=r0gtm7ljfTI3FWMoeDHx5wX_3XXr1dF.DIJLuGdjArA-1779286149-1.0.1.1-9a2cGAhH7_gAuOJTanOYFpMNg5kXkay1Uvyw8ESetJdnAadSiMJ5yy4SMDBU2LNdugZQqY7J6AewMt06U5EoKPbJz3I12eIZyj60fFONhrI; __cflb=04dToNkefVNzY95YiG5KCtdrEUDTepVkGXkgJS3isw; _cfuvid=MpGtxLhWHYaBLbUeF678M7LelDIp6rQr3ZIlPiWchIE-1779286149395-0.0.1.1-604800000; __Secure-next-auth.session-token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..w1Ty11Xd-LKTrkqh.W9SEnjr02PMU-t4Hd_w0LM5TAtMAXNHtxjiCazBAIgHcHL6jp7h7MNvAdIIzBQZ--xYy2YCdc9_IRRxXaRAl7cclir3Q3ukfCnGXoC6LL60SRAM6Gh-nuMXRL6dwVmIsPUgFQFUMpEMoWV2jj41o0e9tzBiBOknO8mOX94VD_AihTkBYvgixePEYjwt2o1COrgCD0EjQOjKfyeb_TYMUaNvJUR-AvIiIdGPevHFxMlcYn7syCdMHCFkXmcv6m_kFEcF3D57CHzPP41gvq0lBLgQTf9EJN2JwDFbiV-nuF3RW3LNNWLPpWD024bEz0xaaZUCQqdPRTN3tNWo-s2d9k3HrNj74GS7ViIHvwdnSf3LTFk48yL-nswJ-EsnHp-etgPQaJrO0HRpQDMJcv21-pZFlWdhNrwiVYL00faILOwCfePOdvT1JvK6B4ZRiGtLwmoPHdVNp7XmBHh98HfxJQJDPYtGxvjGsvR1WM_AxtMwAWZvegIi6JwpAlMq0zZx5nflBke4SaePtRM0WVQjDFi7jqKZEu9y-VDuD7HAjjka0tnMXQzjNqgJvBtBAmbaG9dvwfIqGd-GakmtEhYcUyPspmyOkr5Ec4K_lQdy6hElliJeJrrfvxfJJfxDnhIkiJFHhCC4Fg4iDjAn2935M6VErt1va2yr9MwSapR53Qk09nZ64q6Dmm8u6_4Pn26-eLl-3TO5sem6QpbZdl7kyGSjetqBDGYqqrdelx3whFGuEDznfc8YC-v80Fwv98Phku06ANhPl-l35RUS6BeBKSqD_sBQ9ah5MusicQ3XEc8Wk7vpqps4T3DfoS5BBwFi7mkh_4d6nYRsq7H8c0t_hRKAQ6ilHwQAMi-Y7EdafzAoZOnEur-b8Zs5vNv6EHGR-R4GuqppTIpVfq5XO00P_nO1L66ynpI9JgeE2lkfEdL6Hjr_obu-zUO9NxGFYaD_VRuidDmT5Iwou97XAwfNvQoWx_O2M-e7pw240qp6xOvNhRvi8rHpsYID4q2447U_rlPzhVctPQsPqTbRBT0Ze7TJpfKyX77OIdMwrT7WYhLVFmfoNIQenzjPSEJyQxY31x6t1I2GfNrROjiC_0Exf6F1WW2L85IlLVnlXDvecURCzB4Iv6p1S8yjrx7JFgUbR14AzAdZq-yRmQVdvLn697oZfPjCWHkinUVMNqPxAiiXE5H46R3iac214hNxYOeZqszqLw_P8jAsiIPr9WHqv_tOOQZJOoCEqAVcKj1NepDOMUSlZnCq_9YhmQR9ajPxndgcKgFW0jlAlZ0NtKRaC0QiEgEAVneLOndPlI7Mvhevr7ZS58lgvL_vWAiQguNqGUqQqkYbu6Cqw17tAT9oA2-5DM3LfcZzX-2g0-wooJEnIKWNY29wPxJlHXT2yxam1Ix3VOWpDK0I2rHZw2_3y-3nOuUReBCejImI5x_pRRLZs76fKWLNKDjTOXrfxzHflmdu4Z5ZJFAptMkDwzbj0eAWcrDGmwqtUY0lY7HDVph1lqZVu33kj5zd482ZG0Tx3P03wzmWkrY39U5VsaCsaH9VKBtzfArIZWrGKJpw9t-Qt3yLhtV6gOvqqTu_i-GH8u77rbhM-NpD3JlFDWbrPY6l3c-kRk56pnkKtg-RiFZByysSECCZhQSOHBRDeW4RaOf2yzxgllA192n52fGEnKscrI_pod4OL9zSIYYtKlzur2jYKcTjkm-lIItA8GpjYNpo8ruzO6pEVx2x10Ygm9ja0bZ4zQft82mW4eBj4YTS7DieIRisGxmo9RbmPfFPnT8llx48QE4CRDf2I2KFV1EjCE-y6qBH9Jx7kY_k9CKX_cgwgWtf6In5_ZzYy1tARkG_cnmN19eC6BW_S7EiiU295w-o2TKH0pQ4LY1KNMJHzNuffJPllxMkgsb9wtoZAyXKZym2rib-YxuM_ZxU4xuByRBXOitq8DIk733E2izMbykVMZP4R3enqRPc4QrkAtlmuYWEWBRqKRdaOjUu3nbJM0q0wIpaMYv-QbeBVkR9fJGxGjdFrMdh7P9m_OFrxqHQiw9LlMLYOP-6uBMOLLX1jh72pOeZkhJSoZYlvBRjoydCQWxkpmKnddjW_mxXW8E1A689FjrWY2CytCcMmknLEmKZwOi-JSKOs15YKsd6UTuzvr3hCOoCr_-ope89vdekWVJMOkGGVwHM9r5CvVdysCxzI0zOl2iMzZ42i6zYLxOiZ4oa_dxbKWDquJoqWjdJbcX-qNa9vKgBlJR9jAHhqeK_4e_M3gGEnKtis2dzognAipIVI4e-ply8UQF4Th979B9XE0bBhRLwLjgWiMLk2ZpIG5Skyszayrv9Lj4gkb50A45RioBrNqHJYu5kvonrysQvIDZdnHV8lbGJ3SNdBSmCY4UCLdOvQqAQJtW_gzrybj_LcGS_G2b13WHwI27nBJwFDhBZdqTUuLQVilWkZTdwHc2GMaqmYXWawEfd5JYZflHnYCo2eMFsMzuBbrCYkz2A-ptm2Q4Eb4FgW_Lt6LhgWLsZfWWvh5BT__VLgMqmxTFJt6rFm18hr6tfp50xcn3PRPQ4SAT1x6c2Wwlxz238hrrJ2JhvXSUpy892HbQX3NSxOnPoSFcRDH8FTLCJGWrOkH8xnbRd6LJ8y_QXYbE5Pa1nkLHIYgKbt-a9dmwrzA8aa64Qpwx0lpalHeZSJG6m-Wl4RrFSWXJ2LfgJex05B14FgvXUR1i9iFjtLAQkqoET2HRlpgAoQkCiG6YVd5KExCEe1m07TpDa2HtiJcEbYlhh1wM0FI0OeQECdiImsrgU9hljHy2d27jMMa9CojaxcZiyS_snca0-HUoD1K_t8Q1vx3JiU4aFZZEO2EUdNdfbqau8pHogmJjkVb_qSW9oMwjR_667l-mb4an1kr2uD97KgvqQRoLY3TLpyC1NylCBzBZkX6uB3KsuLVXWupi1tGR6GG3U3De4PTl46ka4x55Qzbbuu1ZAfs7NVMHQGQdGCgQacFySsLcExCBwNUktCKJgYvG_AfWeLwAFEZggU9PSMcP3bBzwI3lafyPGSAxz0h4iQMLK6LxNDrwdeihhYdd61cgozuk6cBiasDue4SXbokyKHJO7AeugmMSjmcxrJBVksP9-MLuGw7Maz2fvodmC5MYqvl2O5pTzMIttk_ug9IlU0yjvy8YECh_GSsffirTjfyoWdN_YRWSsf06cteh-Zovw88noFybrI375UGVPM54zoTtjq2Hgbo7JUdMt8FZDGgC8OQeYv7NUBrIX7BmqGEFVCsXC9Qe3bTpNdQm6xTWo4hpgnH8ym8x4I0zYpimv1j3ubEo4YM6Stn4wlCW3xJb8zw9c5d7iFXo1NvGh-F7ZQPy3jDG7c1SYVqbH0_hfGizORYq5ryllbJSd3SOyJarLJYvMer_e4xmPjW7T03ZyqWK2veiWFbVUhvMcjy6Z-MMS78Cft20MhRdSav2yillyAoZNPrPcRcoCnVl5FHY-aceZpVAmc1mA1Fu1BMrxogpTFzDlot_JBsn9RL6merd6jbDQpOIOkXC4FgO6U44M7HdUKVCgk5agjL6MZde_zUnHrM5ta0Z_bvsLQVyQE1XhlPcoFrgirqHtRPyAFcn5za9kAVbLYKnnfBblyEDQ5qcGNfAAE61sJXqGuYI_17Ddk0jnrUJFTWizuB1RngpWyulCl49_jzlyt3pk67NShWoV3D_GDGS2idEfpLXM9vk_VQOXQKdQF9Hn7tNIJq0Eeht8QNkZXq7z5.AiSduxcY_Hn_TU22YN8TVg",
+      "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE5MzQ0ZTY1LWJiYzktNDRkMS1hOWQwLWY5NTdiMDc5YmQwZSIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS92MSJdLCJjbGllbnRfaWQiOiJhcHBfWDh6WTZ2VzJwUTl0UjNkRTduSzFqTDVnSCIsImV4cCI6MTc4MDE1MDEzMiwiaHR0cHM6Ly9hcGkub3BlbmFpLmNvbS9hdXRoIjp7ImNoYXRncHRfYWNjb3VudF9pZCI6IjlhNjVkY2ExLTM0MzEtNDllMS04NThiLTkxM2NlMTE4YzI5MiIsImNoYXRncHRfYWNjb3VudF91c2VyX2lkIjoidXNlci0zaDVGMlRRb0FoNUJMeTA1dk1iRFozMXpfXzlhNjVkY2ExLTM0MzEtNDllMS04NThiLTkxM2NlMTE4YzI5MiIsImNoYXRncHRfY29tcHV0ZV9yZXNpZGVuY3kiOiJub19jb25zdHJhaW50IiwiY2hhdGdwdF9wbGFuX3R5cGUiOiJmcmVlIiwiY2hhdGdwdF91c2VyX2lkIjoidXNlci0zaDVGMlRRb0FoNUJMeTA1dk1iRFozMXoiLCJpc19zaWdudXAiOnRydWUsInVzZXJfaWQiOiJ1c2VyLTNoNUYyVFFvQWg1Qkx5MDV2TWJEWjMxeiJ9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJNYXhlbkRheDMxOTRAb3V0bG9vay5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sImlhdCI6MTc3OTI4NjEzMSwiaXNzIjoiaHR0cHM6Ly9hdXRoLm9wZW5haS5jb20iLCJqdGkiOiI1YjM0MTY3ZC02OGQ4LTQwZTQtYmMzOC1kZDcxZDdmMTc5MjIiLCJuYmYiOjE3NzkyODYxMzEsInB3ZF9hdXRoX3RpbWUiOjE3NzkyODYxMjc2NDAsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiLCJvZmZsaW5lX2FjY2VzcyIsIm1vZGVsLnJlcXVlc3QiLCJtb2RlbC5yZWFkIiwib3JnYW5pemF0aW9uLnJlYWQiLCJvcmdhbml6YXRpb24ud3JpdGUiXSwic2Vzc2lvbl9pZCI6ImF1dGhzZXNzX1JSanlsTTZHM1pXa0k1U1VxVXNxcFJwYSIsInNsIjp0cnVlLCJzdWIiOiJhdXRoMHxUN2dGVmtvTkxFRXZGNWhORG9VZjg3TzUifQ.dJvGu1v6kvcrRag8fnv0k5ZNd3XWnZRHOuZc-5Lp2DHu8rmiwkiojUZPT7t3a1cJG1GXCqgkQMuhoMkQDCVRkjpkSBYbsYuDz9rpowXC6EMSDUvnvaddnaKs6KvpXNgrDFtWoYf-atv1OzCVNWPe8conwDhE4OKek1a5WNT0YDoN0NEru4RPk6V-1cQrGwhZwpg8RkXfIdNtJkHiimcy3ym1BAkS-sxcxv4bdq1XyTLRQQc-3jr1-95luGaiiEh52ME1mZPzolu1_zr9EVDZbMqEiyIv0T2IOIMXgeaWa6T-KCHvsnWx6g-XuixFYOzNkAHfIkrIYO6AoV5V0GBMSVvWRMmSx0u523nDweDmDZnPmF3pxUFo5WLOucUvf7oEP4myPCy2fU3n8HzlfMRa_11N282GI9iq0xQb22sKg_PMndJNqmCIOqeoy_vxlwxOYXdOoo6J-nNDWFF1U21Q5lVI3slNoz5pzGVqoCpjs6W758QQz_8BQzXDB2OLD11lRs5Wqe8I17BR-_pC78XXB5Okq7w_CFfDfqZmpk5-7GY_JN5_ftoKmaDi0-n_m7-ObtJoGsyBWOX1_xROUPxpADUoGXPnVzVx0XVI2umLRBVO32qjsphCoV0bS7kD5eMS7CaKCxIqVgWSnS3K5ITTRFI2QvMFGlRxocQ2UgCB3Fo",
+      "oai_device_id": "",
+      "openai_sentinel_token": "",
+      "mode": "access_token",
+      "session_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..w1Ty11Xd-LKTrkqh.W9SEnjr02PMU-t4Hd_w0LM5TAtMAXNHtxjiCazBAIgHcHL6jp7h7MNvAdIIzBQZ--xYy2YCdc9_IRRxXaRAl7cclir3Q3ukfCnGXoC6LL60SRAM6Gh-nuMXRL6dwVmIsPUgFQFUMpEMoWV2jj41o0e9tzBiBOknO8mOX94VD_AihTkBYvgixePEYjwt2o1COrgCD0EjQOjKfyeb_TYMUaNvJUR-AvIiIdGPevHFxMlcYn7syCdMHCFkXmcv6m_kFEcF3D57CHzPP41gvq0lBLgQTf9EJN2JwDFbiV-nuF3RW3LNNWLPpWD024bEz0xaaZUCQqdPRTN3tNWo-s2d9k3HrNj74GS7ViIHvwdnSf3LTFk48yL-nswJ-EsnHp-etgPQaJrO0HRpQDMJcv21-pZFlWdhNrwiVYL00faILOwCfePOdvT1JvK6B4ZRiGtLwmoPHdVNp7XmBHh98HfxJQJDPYtGxvjGsvR1WM_AxtMwAWZvegIi6JwpAlMq0zZx5nflBke4SaePtRM0WVQjDFi7jqKZEu9y-VDuD7HAjjka0tnMXQzjNqgJvBtBAmbaG9dvwfIqGd-GakmtEhYcUyPspmyOkr5Ec4K_lQdy6hElliJeJrrfvxfJJfxDnhIkiJFHhCC4Fg4iDjAn2935M6VErt1va2yr9MwSapR53Qk09nZ64q6Dmm8u6_4Pn26-eLl-3TO5sem6QpbZdl7kyGSjetqBDGYqqrdelx3whFGuEDznfc8YC-v80Fwv98Phku06ANhPl-l35RUS6BeBKSqD_sBQ9ah5MusicQ3XEc8Wk7vpqps4T3DfoS5BBwFi7mkh_4d6nYRsq7H8c0t_hRKAQ6ilHwQAMi-Y7EdafzAoZOnEur-b8Zs5vNv6EHGR-R4GuqppTIpVfq5XO00P_nO1L66ynpI9JgeE2lkfEdL6Hjr_obu-zUO9NxGFYaD_VRuidDmT5Iwou97XAwfNvQoWx_O2M-e7pw240qp6xOvNhRvi8rHpsYID4q2447U_rlPzhVctPQsPqTbRBT0Ze7TJpfKyX77OIdMwrT7WYhLVFmfoNIQenzjPSEJyQxY31x6t1I2GfNrROjiC_0Exf6F1WW2L85IlLVnlXDvecURCzB4Iv6p1S8yjrx7JFgUbR14AzAdZq-yRmQVdvLn697oZfPjCWHkinUVMNqPxAiiXE5H46R3iac214hNxYOeZqszqLw_P8jAsiIPr9WHqv_tOOQZJOoCEqAVcKj1NepDOMUSlZnCq_9YhmQR9ajPxndgcKgFW0jlAlZ0NtKRaC0QiEgEAVneLOndPlI7Mvhevr7ZS58lgvL_vWAiQguNqGUqQqkYbu6Cqw17tAT9oA2-5DM3LfcZzX-2g0-wooJEnIKWNY29wPxJlHXT2yxam1Ix3VOWpDK0I2rHZw2_3y-3nOuUReBCejImI5x_pRRLZs76fKWLNKDjTOXrfxzHflmdu4Z5ZJFAptMkDwzbj0eAWcrDGmwqtUY0lY7HDVph1lqZVu33kj5zd482ZG0Tx3P03wzmWkrY39U5VsaCsaH9VKBtzfArIZWrGKJpw9t-Qt3yLhtV6gOvqqTu_i-GH8u77rbhM-NpD3JlFDWbrPY6l3c-kRk56pnkKtg-RiFZByysSECCZhQSOHBRDeW4RaOf2yzxgllA192n52fGEnKscrI_pod4OL9zSIYYtKlzur2jYKcTjkm-lIItA8GpjYNpo8ruzO6pEVx2x10Ygm9ja0bZ4zQft82mW4eBj4YTS7DieIRisGxmo9RbmPfFPnT8llx48QE4CRDf2I2KFV1EjCE-y6qBH9Jx7kY_k9CKX_cgwgWtf6In5_ZzYy1tARkG_cnmN19eC6BW_S7EiiU295w-o2TKH0pQ4LY1KNMJHzNuffJPllxMkgsb9wtoZAyXKZym2rib-YxuM_ZxU4xuByRBXOitq8DIk733E2izMbykVMZP4R3enqRPc4QrkAtlmuYWEWBRqKRdaOjUu3nbJM0q0wIpaMYv-QbeBVkR9fJGxGjdFrMdh7P9m_OFrxqHQiw9LlMLYOP-6uBMOLLX1jh72pOeZkhJSoZYlvBRjoydCQWxkpmKnddjW_mxXW8E1A689FjrWY2CytCcMmknLEmKZwOi-JSKOs15YKsd6UTuzvr3hCOoCr_-ope89vdekWVJMOkGGVwHM9r5CvVdysCxzI0zOl2iMzZ42i6zYLxOiZ4oa_dxbKWDquJoqWjdJbcX-qNa9vKgBlJR9jAHhqeK_4e_M3gGEnKtis2dzognAipIVI4e-ply8UQF4Th979B9XE0bBhRLwLjgWiMLk2ZpIG5Skyszayrv9Lj4gkb50A45RioBrNqHJYu5kvonrysQvIDZdnHV8lbGJ3SNdBSmCY4UCLdOvQqAQJtW_gzrybj_LcGS_G2b13WHwI27nBJwFDhBZdqTUuLQVilWkZTdwHc2GMaqmYXWawEfd5JYZflHnYCo2eMFsMzuBbrCYkz2A-ptm2Q4Eb4FgW_Lt6LhgWLsZfWWvh5BT__VLgMqmxTFJt6rFm18hr6tfp50xcn3PRPQ4SAT1x6c2Wwlxz238hrrJ2JhvXSUpy892HbQX3NSxOnPoSFcRDH8FTLCJGWrOkH8xnbRd6LJ8y_QXYbE5Pa1nkLHIYgKbt-a9dmwrzA8aa64Qpwx0lpalHeZSJG6m-Wl4RrFSWXJ2LfgJex05B14FgvXUR1i9iFjtLAQkqoET2HRlpgAoQkCiG6YVd5KExCEe1m07TpDa2HtiJcEbYlhh1wM0FI0OeQECdiImsrgU9hljHy2d27jMMa9CojaxcZiyS_snca0-HUoD1K_t8Q1vx3JiU4aFZZEO2EUdNdfbqau8pHogmJjkVb_qSW9oMwjR_667l-mb4an1kr2uD97KgvqQRoLY3TLpyC1NylCBzBZkX6uB3KsuLVXWupi1tGR6GG3U3De4PTl46ka4x55Qzbbuu1ZAfs7NVMHQGQdGCgQacFySsLcExCBwNUktCKJgYvG_AfWeLwAFEZggU9PSMcP3bBzwI3lafyPGSAxz0h4iQMLK6LxNDrwdeihhYdd61cgozuk6cBiasDue4SXbokyKHJO7AeugmMSjmcxrJBVksP9-MLuGw7Maz2fvodmC5MYqvl2O5pTzMIttk_ug9IlU0yjvy8YECh_GSsffirTjfyoWdN_YRWSsf06cteh-Zovw88noFybrI375UGVPM54zoTtjq2Hgbo7JUdMt8FZDGgC8OQeYv7NUBrIX7BmqGEFVCsXC9Qe3bTpNdQm6xTWo4hpgnH8ym8x4I0zYpimv1j3ubEo4YM6Stn4wlCW3xJb8zw9c5d7iFXo1NvGh-F7ZQPy3jDG7c1SYVqbH0_hfGizORYq5ryllbJSd3SOyJarLJYvMer_e4xmPjW7T03ZyqWK2veiWFbVUhvMcjy6Z-MMS78Cft20MhRdSav2yillyAoZNPrPcRcoCnVl5FHY-aceZpVAmc1mA1Fu1BMrxogpTFzDlot_JBsn9RL6merd6jbDQpOIOkXC4FgO6U44M7HdUKVCgk5agjL6MZde_zUnHrM5ta0Z_bvsLQVyQE1XhlPcoFrgirqHtRPyAFcn5za9kAVbLYKnnfBblyEDQ5qcGNfAAE61sJXqGuYI_17Ddk0jnrUJFTWizuB1RngpWyulCl49_jzlyt3pk67NShWoV3D_GDGS2idEfpLXM9vk_VQOXQKdQF9Hn7tNIJq0Eeht8QNkZXq7z5.AiSduxcY_Hn_TU22YN8TVg",
+      "device_id": "1bcfa2cd-fdf7-4d11-b93a-3198587c3413",
+      "prefer_session_refresh": true,
+      "auto_register": {
+        "enabled": false,
+        "project_dir": "./CTF-reg",
+        "config_path": "/root/Gpt-Agreement-Payment/CTF-reg/config.paypal-proxy.json",
+        "use_ctf_proxy": true,
+        "retry_on_auth_error": true,
+        "persist_to": "/tmp/ctf_last_paypal_auth.json"
+      }
+    },
+    "request_style": "modern",
+    "use_flows_for_templates": false,
+    "output_url_mode": "provider",
+    "proxy": "socks5://maeu14500-region-JP:vahh32rt@us.1024proxy.io:3000",
+    "check_coupon_after_checkout": true,
+    "allow_charge_when_coupon_ineligible": false,
+    "expected_due": 0,
+    "auto_refresh_on_due_mismatch": false,
+    "max_due_mismatch_refreshes": 0
+  },
+  "locale": "US",
+  "runtime": {
+    "confirm_mode": "shared_payment_method",
+    "version": "fed52f3bc6",
+    "js_checksum": "FILL_FROM_CURRENT_STRIPE_CHECKOUT",
+    "rv_timestamp": "FILL_FROM_CURRENT_STRIPE_CHECKOUT",
+    "top_checkout_config_id": "",
+    "payment_method_checkout_config_id": "",
+    "frontend_execution": ""
+  },
+  "proxy": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+  "cpa": {},
+  "rt_phone_verify": {
+    "enabled": true,
+    "country": "USA",
+    "openai_country": "US",
+    "service": "Openai-R3",
+    "operator": "",
+    "max_accounts_per_number": 3,
+    "number_ttl_seconds": 900,
+    "poll_seconds": 5,
+    "timeout_seconds": 180,
+    "continue_after_code": false,
+    "max_number_attempts": 1,
+    "provider": "pvapins",
+    "poll_even_if_page_unchanged": true
+  },
+  "_proxy_pool": {
+    "jp": {
+      "fixed": true,
+      "source": "PAYPAL_FREE_JP_PROXY"
+    }
+  },
+  "stage_proxies": {
+    "fingerprint": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "fetch_publishable_key": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "stripe_init": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "telemetry_init": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "elements": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "link_lookup": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "address": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "telemetry_address": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "telemetry_card_input": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "payment_method": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "telemetry_confirm": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "confirm": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "verify_challenge": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "three_ds_authenticate": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "setup_intent_poll": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "telemetry_poll": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000",
+    "poll": "http://maeu14500-region-US-sid-pS1hQi2K-t-5:vahh32rt@us.1024proxy.io:3000"
+  }
+}
