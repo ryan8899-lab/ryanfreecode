@@ -1,0 +1,105 @@
+# mitmproxy 抓包（大文件，可能含敏感 cookies/tokens）
+/flows
+flows.gz
+flows_*/
+*.har
+*_har
+
+# Secrets / runtime credentials — never publish
+.secrets/
+*.env
+*.env.*
+!.env.example
+!*.env.example
+scripts/key_cache.json
+scripts/phone_banned.txt
+CTF-reg/custom_mail_pool.txt*
+CTF-reg/proxy_pool.txt*
+CTF-reg/register_one_*.json
+CTF-reg/rt_protocol_cfg_*.json
+CTF-pay/rt_proxy_cfg_*.json
+CTF-pay/webui_payment_link_*.json
+CTF-pay/paypal_cf_persist*/
+memory/
+backups/
+venv/
+=0.0.9
+webui/=0.0.9
+
+# PayPal Camoufox 持久化 profile（含 session cookies）
+CTF-pay/paypal_cf_persist/
+CTF-pay/paypal_cf_persist.bak-*/
+CTF-pay/paypal_cf_persist.bak_*/
+
+# WhatsApp/Web relay 持久化 session（含本机登录态 / 浏览器缓存）
+CTF-pay/whatsapp_relay/
+webui/whatsapp_relay/node_modules/
+webui/whatsapp_relay/.wwebjs_cache/
+webui/whatsapp_relay/.wwebjs_auth/
+webui/whatsapp_relay/.wa-session/
+webui/whatsapp_relay/baileys-gopay/
+
+# 运行时产物（账号凭证 / 支付结果 / 日志 / 域池状态 / CF API token）
+output/
+
+# 用户实际配置（保留 *.example.json，忽略实际填写过的）
+CTF-pay/config.paypal.json
+CTF-pay/config.paypal-*.json
+CTF-reg/config.paypal-proxy.json
+CTF-reg/config.paypal-proxy-*.json
+CTF-reg/config.noproxy.json
+
+# pipeline 注册临时 config（运行时产物）
+CTF-pay/pipeline_pay_*.json
+CTF-reg/pipeline_cardw_*.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# 备份（含 webui config_writer 写的 *.bak.<unix_ts>，里面是旧的真实凭据）
+*.bak_*
+*.bak-*
+*.bak.*
+
+# IDE / 工具
+.vscode/
+.idea/
+.claude/
+.codex/
+.serena/
+.superpowers/
+docs/superpowers/
+
+# Agent/Codex collaboration-only instructions; keep out of public releases.
+AGENTS.md
+CLAUDE.md
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 测试期临时数据
+test_*.py
+!test_rt.py.example
+!webui/tests/test_*.py
+
+# Runtime/generated secrets
+*.bak
+*.bak-*
+*.bak.*
+*.bak_*
+CTF-pay/*.json
+!CTF-pay/*.example.json
+CTF-pay/__pycache__/
+CTF-reg/*.json
+!CTF-reg/*.example.json
+CTF-reg/*.bak*
+CTF-reg/__pycache__/
+scripts/*.bak*
+scripts/__pycache__/
+webui/backend/routes/__pycache__/
+webui/whatsapp_relay/node_modules/
+webui/frontend/node_modules/
+webui/frontend/dist/
